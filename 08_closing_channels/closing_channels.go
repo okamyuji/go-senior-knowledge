@@ -48,12 +48,12 @@ func FanIn(channels ...<-chan int) []int {
 
 	wg.Add(len(channels))
 	for _, ch := range channels {
-		go func() {
+		go func(c <-chan int) {
 			defer wg.Done()
-			for v := range ch {
+			for v := range c {
 				out <- v
 			}
-		}()
+		}(ch)
 	}
 
 	go func() {

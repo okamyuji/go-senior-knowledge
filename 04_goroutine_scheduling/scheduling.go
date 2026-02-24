@@ -11,7 +11,6 @@ import (
 // the number of active goroutines via runtime.NumGoroutine, then releases
 // them. It returns the goroutine count observed while all n were alive.
 func GoroutineCount(n int) int {
-	ready := make(chan struct{})
 	done := make(chan struct{})
 
 	var wg sync.WaitGroup
@@ -29,7 +28,6 @@ func GoroutineCount(n int) int {
 
 	// Signal goroutines to exit.
 	close(done)
-	_ = ready
 
 	return count
 }
@@ -60,9 +58,9 @@ func ParallelWork(n int) []int {
 	ch := make(chan result, n)
 
 	for i := range n {
-		go func() {
+		go func(i int) {
 			ch <- result{index: i, value: i * i}
-		}()
+		}(i)
 	}
 
 	results := make([]int, n)

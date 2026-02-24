@@ -70,12 +70,12 @@ func WaitGroupOrder(n int) int {
 	)
 	wg.Add(n)
 	for i := range n {
-		go func() {
+		go func(i int) {
 			defer wg.Done()
 			mu.Lock()
 			results = append(results, i)
 			mu.Unlock()
-		}()
+		}(i)
 	}
 	wg.Wait()
 	return len(results)

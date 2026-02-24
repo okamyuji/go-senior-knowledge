@@ -11,26 +11,20 @@ func DeferOrder() (order []string) {
 	return
 }
 
-// DeferWithClosureBug demonstrates a closure capture gotcha. A single
-// variable (shared) is captured by reference by multiple closures. All
-// closures see the last value written to the variable.
-//
-// Note: Go 1.22 changed for-loop variable scoping so each iteration gets
-// its own copy. This example uses a shared variable outside the loop to
-// illustrate the underlying concept that still applies to non-loop variables.
+// DeferWithClosureBug demonstrates a defer closure capture gotcha. A single
+// variable (shared) is captured by reference by all deferred closures. When
+// the defers execute (in LIFO order), they all see the final value of shared.
 func DeferWithClosureBug(n int) []int {
 	var result []int
-	var defers []func()
 	shared := 0
-	for range n {
-		shared++
-		defers = append(defers, func() {
-			result = append(result, shared)
-		})
-	}
-	for _, fn := range defers {
-		fn()
-	}
+	func() {
+		for range n {
+			shared++
+			defer func() {
+				result = append(result, shared)
+			}()
+		}
+	}()
 	return result
 }
 
