@@ -29,11 +29,11 @@ import (
 
 // TransportConfig holds parameters for constructing a customized http.Transport.
 type TransportConfig struct {
-	MaxIdleConns        int
-	MaxIdleConnsPerHost int
-	IdleConnTimeout     time.Duration
-	DialTimeout         time.Duration
-	TLSHandshakeTimeout time.Duration
+	MaxIdleConns          int
+	MaxIdleConnsPerHost   int
+	IdleConnTimeout       time.Duration
+	DialTimeout           time.Duration
+	TLSHandshakeTimeout   time.Duration
 	ResponseHeaderTimeout time.Duration
 }
 

@@ -22,9 +22,9 @@ import "unsafe"
 //	bool (1 byte) + 7 bytes padding + int64 (8 bytes) +
 //	bool (1 byte) + 7 bytes padding + int64 (8 bytes) = 32 bytes
 type BadLayout struct {
-	Flag1 bool
+	Flag1  bool
 	Value1 int64
-	Flag2 bool
+	Flag2  bool
 	Value2 int64
 }
 

@@ -87,10 +87,10 @@ func SafeChannelCommunication(n int) int {
 
 	wg.Add(n)
 	for i := range n {
-		go func() {
+		go func(i int) {
 			defer wg.Done()
 			ch <- i + 1
-		}()
+		}(i)
 	}
 
 	// Close the channel after all producers finish.

@@ -45,15 +45,26 @@ func DisableChannel(ch1, ch2 <-chan int) []int {
 }
 
 // DynamicSelect reads from ch and doubles each value. When the doubled value
-// exceeds the threshold, it stops processing and returns. It returns all
-// processed values.
+// exceeds the threshold, it disables the channel receive by setting it to nil
+// and returns all processed values. A second nil channel case demonstrates
+// that nil channels are never selected.
 func DynamicSelect(ch <-chan int, threshold int) []int {
 	var result []int
-	for v := range ch {
-		doubled := v * 2
-		result = append(result, doubled)
-		if doubled > threshold {
-			return result
+	var done <-chan struct{} // nil channel, never selected
+	for ch != nil {
+		select {
+		case v, ok := <-ch:
+			if !ok {
+				ch = nil
+				continue
+			}
+			doubled := v * 2
+			result = append(result, doubled)
+			if doubled > threshold {
+				ch = nil
+			}
+		case <-done:
+			// never reached: nil channel is never selected
 		}
 	}
 	return result

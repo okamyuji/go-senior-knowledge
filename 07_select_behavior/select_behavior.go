@@ -21,10 +21,14 @@ func SelectMultipleReady(n int) (ch1Count, ch2Count int) {
 		case <-ch2:
 			ch2Count++
 		}
-		// drain whichever channel was not selected
+		// drain each channel individually with non-blocking receives
 		select {
 		case <-ch1:
+		default:
+		}
+		select {
 		case <-ch2:
+		default:
 		}
 	}
 	return ch1Count, ch2Count

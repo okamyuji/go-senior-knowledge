@@ -44,11 +44,11 @@ func ConcurrentTasks(n int) []int64 {
 	wg.Add(n)
 
 	for i := range n {
-		go func() {
+		go func(i int) {
 			defer wg.Done()
 			limit := (i + 1) * 1000
 			ch <- result{index: i, value: PreemptibleWork(limit)}
-		}()
+		}(i)
 	}
 
 	wg.Wait()
